@@ -34,23 +34,17 @@
         src: flask_app/
         dest: "{{ app_dir }}/"
         mode: '0755'
-    
-    - name: Show all running containers before removing
-      shell: docker ps -a
 
-    - name: Stop and remove any container with name matching flask_app
-      shell: |
-        docker ps -a --filter "name=flask_app" --format "{{.ID}}" | xargs -r docker rm -f
-      ignore_errors: yes
-      
-    - name: Stop and remove any container named flask_app if it exists
-      shell: |
-        docker ps -a --filter "name=flask_app" --format "{{.ID}}" | xargs -r docker rm -f
+    - name: Stop existing Compose containers if any
+      command: docker-compose down
+      args:
+        chdir: "{{ app_dir }}"
       ignore_errors: yes
 
-    - name: Run Docker Compose up
+    - name: Start containers with Docker Compose
       command: docker-compose up -d
       args:
         chdir: "{{ app_dir }}"
+
 
 
