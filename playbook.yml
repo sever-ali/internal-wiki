@@ -35,16 +35,16 @@
         dest: "{{ app_dir }}/"
         mode: '0755'
 
-    - name: Stop existing Compose containers if any
-      command: docker-compose down
-      args:
-        chdir: "{{ app_dir }}"
+    - name: Stop and remove existing flask_app container if it exists
+      shell: |
+        docker rm -f flask_app || true
       ignore_errors: yes
 
-    - name: Start containers with Docker Compose
+    - name: Run Docker Compose up
       command: docker-compose up -d
       args:
         chdir: "{{ app_dir }}"
+
 
 
 
