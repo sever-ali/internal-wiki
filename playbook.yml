@@ -42,9 +42,15 @@
       shell: |
         docker ps -a --filter "name=flask_app" --format "{{.ID}}" | xargs -r docker rm -f
       ignore_errors: yes
+      
+    - name: Stop and remove any container named flask_app if it exists
+      shell: |
+        docker ps -a --filter "name=flask_app" --format "{{.ID}}" | xargs -r docker rm -f
+      ignore_errors: yes
 
     - name: Run Docker Compose up
-      command: docker compose up -d
+      command: docker-compose up -d
       args:
         chdir: "{{ app_dir }}"
+
 
