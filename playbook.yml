@@ -34,10 +34,13 @@
         src: flask_app/
         dest: "{{ app_dir }}/"
         mode: '0755'
-        
-    - name: Force remove old flask_app container by exact name
+    
+    - name: Show all running containers before removing
+      shell: docker ps -a
+
+    - name: Stop and remove any container with name matching flask_app
       shell: |
-        docker rm -f flask_app || true
+        docker ps -a --filter "name=flask_app" --format "{{.ID}}" | xargs -r docker rm -f
       ignore_errors: yes
 
     - name: Run Docker Compose up
