@@ -20,8 +20,9 @@ jobs:
     - name: Deploy to EC2 and restart app
       run: |
         ssh -o StrictHostKeyChecking=no ubuntu@35.177.145.242 << 'EOF'
-          cd internal-wiki
+          cd /home/ubuntu/internal-wiki-devops/flask_app/docker-compose.yml
           git pull origin main
           docker-compose down
           docker-compose up -d --build
         EOF
+
