@@ -39,6 +39,9 @@
       shell: |
         docker rm -f flask_app || true
       ignore_errors: yes
+      
+    - name: Stop and remove old nginx container (if any)
+      command: docker rm -f nginx_proxy || true
 
     - name: Run Docker Compose up
       command: docker-compose up -d
