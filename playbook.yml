@@ -34,6 +34,12 @@
         src: flask_app/
         dest: "{{ app_dir }}/"
         mode: '0755'
+        
+    - name: Stop and remove existing Docker containers (if any)
+      command: docker compose down
+      args:
+        chdir: "{{ app_dir }}"
+      ignore_errors: yes
 
     - name: Run Docker Compose up
       command: docker-compose up -d
