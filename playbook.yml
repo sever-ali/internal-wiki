@@ -35,10 +35,11 @@
         dest: "{{ app_dir }}/"
         mode: '0755'
         
-    - name: Stop and remove existing Docker containers (if any)
-      command: docker compose down
-      args:
-        chdir: "{{ app_dir }}"
+    - name: Stop and remove existing container if it exists
+      shell: |
+        if [ "$(docker ps -aq -f name=flask_app)" ]; then
+          docker stop flask_app && docker rm flask_app
+        fi
       ignore_errors: yes
 
     - name: Run Docker Compose up
