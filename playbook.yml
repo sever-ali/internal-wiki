@@ -35,11 +35,9 @@
         dest: "{{ app_dir }}/"
         mode: '0755'
         
-    - name: Stop and remove existing flask_app container
+    - name: Force remove old flask_app container by exact name
       shell: |
-        if [ "$(docker ps -a -q -f name=flask_app)" ]; then
-          docker stop flask_app && docker rm flask_app
-        fi
+        docker rm -f flask_app || true
       ignore_errors: yes
 
     - name: Run Docker Compose up
