@@ -1,0 +1,13 @@
+# Ignore large system or generated files
+*.vmdk
+*.vmen
+.vagrant/
+.terraform/
+*.log
+*.DS_Store
+__pycache__/
+*.tfstate
+*.tfstate.backup
+venv/
+*.pyc
+.env

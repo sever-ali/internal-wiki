@@ -1,0 +1,53 @@
+- name: Deploy Flask + Nginx via Docker Compose
+  hosts: web
+  become: yes
+
+  vars:
+    app_dir: /opt/flask_wiki
+
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        update_cache: yes
+        state: present
+
+    - name: Install Docker Compose (standalone plugin)
+      get_url:
+        url: https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-linux-x86_64
+        dest: /usr/local/bin/docker-compose
+        mode: '0755'
+
+    - name: Ensure Docker is started
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Create deployment folder
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+
+    - name: Copy full Flask Compose app to EC2
+      copy:
+        src: flask_app/
+        dest: "{{ app_dir }}/"
+        mode: '0755'
+
+    - name: Stop and remove existing flask_app container if it exists
+      shell: |
+        docker rm -f flask_app || true
+      ignore_errors: yes
+      
+    - name: Stop and remove old nginx container (if any)
+      command: docker rm -f nginx_proxy || true
+
+    - name: Run Docker Compose up
+      command: docker-compose up -d
+      args:
+        chdir: "{{ app_dir }}"
+
+
+
+
